@@ -65,7 +65,7 @@
             crossedOut: false,
           }
         },
-        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.ctrl="deleteItem">{{todo.text}}</li>',
+        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{todo.text}}</li>',
         methods: {
           crossOut: function() {
             if (this.crossedOut) {
@@ -88,7 +88,7 @@
             crossedOut: false,
           }
         },
-        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.ctrl="deleteItem">{{weeklyTodo.text}}</li>',
+        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{weeklyTodo.text}}</li>',
         methods: {
           crossOut: function() {
             if (this.crossedOut) {
