@@ -17,6 +17,11 @@
           <input type="text" placeholder="new item" v-model="todoTemp">
           <button @click="addTodo('todo')">Add Item</button>
           <ul>
+            <!-- v-for iterates through the todo objects in the array
+            v-bind:todo binds the individual todo object so it can be dynamic
+            v-bind:key is needed when using v-for so vue can keep track each node's identity
+            @delete-todo listens for an event emited by the child component
+            -->
             <todo-item
             v-for='item in todo'
             v-bind:todo='item'
@@ -31,6 +36,7 @@
           <input type="text" placeholder="new item" v-model="weekTodoTemp">
           <button @click="addTodo('weekTodo')">Add Item</button>
           <ul>
+            <!-- Same descriptions apply as for todo-item -->
             <weekly-todo
             v-for='item in weeklyTodo'
             v-bind:weekly-todo='item'
@@ -47,6 +53,7 @@
 <script>
   var app = new Vue({
     el: '#app',
+    //data holds the propeties for the vue instance, having data as a function allows for the ability to not overwrite data so there can multiple instances of the same data type
     data: function() {
       return {
         todoTemp: '',
@@ -57,18 +64,24 @@
       }
     },
 
+    //components are handy for creating reuseable elements
     components: {
+      //components must have names that are at least two words and in kebab case
       'todo-item': {
+        //props are data that are passed down from the parent to the child, without them you wouldn't be able to access data from the parent
         props: ['todo'],
         data: function() {
           return {
             crossedOut: false,
           }
         },
+        //templates are the framework for the element that will appear in the DOM
         template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{todo.text}}</li>',
+        //component methods are functions that can only be used on the component that they are defined in
         methods: {
           crossOut: function() {
             if (this.crossedOut) {
+              //this refers to the component
               this.crossedOut = false;
             }
             else {
@@ -77,6 +90,7 @@
           },
           deleteItem: function() {
             var todoItem = this.todo;
+            //children/components can emit events up to the parent using $emit('EVENT-NAME') they can even pass along data
             this.$emit('delete-todo', todoItem);
           },
         },
@@ -105,10 +119,11 @@
         },
       },
     },
-
+    //methods are functions that can be used to manipulate the data of the vue instance
     methods: {
       addTodo: function(type) {
         if (type === "todo") {
+          //this refers to the Vue instance, must be used in order to access data
           var count = this.todo.length;
           this.todo.push({id: count, type: 'todo', text: this.todoTemp});
         }
