@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Planner</title>
+  </head>
+
+  <body>
+    <div id="app" class="grid-container">
+      <div class="daySection">
+
+      </div>
+      <div class="noteSection">
+        <div class="todos">
+          <h2>To-do</h2>
+          <input type="text" placeholder="new item" v-model="todoTemp">
+          <button @click="addTodo('todo')">Add Item</button>
+          <ul>
+            <todo-item
+            v-for='item in todo'
+            v-bind:todo='item'
+            v-bind:key='item.id'
+            @delete-todo='deleteTodo'>
+            </todo-item>
+          </ul>
+        </div>
+
+        <div class="weeklyTodos">
+          <h2>Weekly To-do</h2>
+          <input type="text" placeholder="new item" v-model="weekTodoTemp">
+          <button @click="addTodo('weekTodo')">Add Item</button>
+          <ul>
+            <weekly-todo
+            v-for='item in weeklyTodo'
+            v-bind:weekly-todo='item'
+            v-bind:key='item.id'
+            @delete-todo='deleteTodo'>
+            </weekly-todo>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: function() {
+      return {
+        todoTemp: '',
+        weekTodoTemp: '',
+        todo: [{id: 0, type: 'todo', text: 'dummy'}],
+        weeklyTodo: [{id: 0, type: 'weekTodo', text: 'dummy'}],
+        daysOfWeek: [],
+      }
+    },
+
+    components: {
+      'todo-item': {
+        props: ['todo'],
+        data: function() {
+          return {
+            crossedOut: false,
+          }
+        },
+        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.ctrl="deleteItem">{{todo.text}}</li>',
+        methods: {
+          crossOut: function() {
+            if (this.crossedOut) {
+              this.crossedOut = false;
+            }
+            else {
+              this.crossedOut = true;
+            }
+          },
+          deleteItem: function() {
+            var todoItem = this.todo;
+            this.$emit('delete-todo', todoItem);
+          },
+        },
+      },
+      'weekly-todo': {
+        props: ['weeklyTodo'],
+        data: function() {
+          return {
+            crossedOut: false,
+          }
+        },
+        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.ctrl="deleteItem">{{weeklyTodo.text}}</li>',
+        methods: {
+          crossOut: function() {
+            if (this.crossedOut) {
+              this.crossedOut = false;
+            }
+            else {
+              this.crossedOut = true;
+            }
+          },
+          deleteItem: function() {
+            var todoItem = this.weeklyTodo;
+            this.$emit('delete-todo', todoItem);
+          },
+        },
+      },
+    },
+
+    methods: {
+      addTodo: function(type) {
+        if (type === "todo") {
+          var count = this.todo.length;
+          this.todo.push({id: count, type: 'todo', text: this.todoTemp});
+        }
+        else if (type === "weekTodo") {
+          var count = this.weeklyTodo.length;
+          this.weeklyTodo.push({id: count, type: 'weekTodo', text: this.weekTodoTemp});
+        }
+      },
+      deleteTodo: function(todoItem) {
+        if (todoItem.type === "todo") {
+          var index = this.todo.indexOf(todoItem);
+          this.todo.splice(index, 1);
+        }
+        else if (todoItem.type === "weekTodo") {
+          var index = this.weeklyTodo.indexOf(todoItem);
+          this.weeklyTodo.splice(index, 1);
+        }
+      },
+    },
+  });
+</script>
+
+<style>
+  .grid-container {
+    display: grid;
+    grid-gap: 25px;
+    grid-template-columns: auto auto;
+  }
+  .daySection {
+    background: wheat;
+  }
+  .noteSection {
+    background: beige;
+    padding: 5px 10px;
+  }
+  .lineThrough {
+    text-decoration: line-through;
+  }
+</style>
