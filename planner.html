@@ -2,16 +2,18 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Cousine|Inconsolata|PT+Mono" rel="stylesheet">
     <title>Planner</title>
   </head>
 
   <body>
     <div id="app" class="grid-container">
-      <div class="daySection">
+      <div class="section daySection">
 
       </div>
-      <div class="noteSection">
+      <div class="section noteSection">
         <div class="todos">
           <h2>To-do</h2>
           <input type="text" placeholder="new item" v-model="todoTemp">
@@ -23,10 +25,10 @@
             @delete-todo listens for an event emited by the child component
             -->
             <todo-item
-            v-for='item in todo'
+            v-for='(item, index) in todo'
             v-bind:todo='item'
             v-bind:key='item.id'
-            @delete-todo='deleteTodo'>
+            @delete-todo='todo.splice(index, 1)'>
             </todo-item>
           </ul>
         </div>
@@ -38,10 +40,10 @@
           <ul>
             <!-- Same descriptions apply as for todo-item -->
             <weekly-todo
-            v-for='item in weeklyTodo'
+            v-for='(item, index) in weeklyTodo'
             v-bind:weekly-todo='item'
             v-bind:key='item.id'
-            @delete-todo='deleteTodo'>
+            @delete-todo='weeklyTodo.splice(index, 1)'>
             </weekly-todo>
           </ul>
         </div>
@@ -80,18 +82,12 @@
         //component methods are functions that can only be used on the component that they are defined in
         methods: {
           crossOut: function() {
-            if (this.crossedOut) {
-              //this refers to the component
-              this.crossedOut = false;
-            }
-            else {
-              this.crossedOut = true;
-            }
+            this.crossedOut = !this.crossedOut;
           },
           deleteItem: function() {
-            var todoItem = this.todo;
+            let todoItem = this.todo;
             //children/components can emit events up to the parent using $emit('EVENT-NAME') they can even pass along data
-            this.$emit('delete-todo', todoItem);
+            this.$emit('delete-todo');
           },
         },
       },
@@ -105,41 +101,29 @@
         template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{weeklyTodo.text}}</li>',
         methods: {
           crossOut: function() {
-            if (this.crossedOut) {
-              this.crossedOut = false;
-            }
-            else {
-              this.crossedOut = true;
-            }
+            this.crossedOut = !this.crossedOut;
           },
           deleteItem: function() {
-            var todoItem = this.weeklyTodo;
-            this.$emit('delete-todo', todoItem);
+            let todoItem = this.weeklyTodo;
+            this.$emit('delete-todo');
           },
         },
       },
     },
     //methods are functions that can be used to manipulate the data of the vue instance
     methods: {
+      generateID: function(length) {
+        let newID = Math.random().toString(36).substring(length);
+      },
       addTodo: function(type) {
         if (type === "todo") {
           //this refers to the Vue instance, must be used in order to access data
-          var count = this.todo.length;
-          this.todo.push({id: count, type: 'todo', text: this.todoTemp});
+          let todoID = this.generateID(2);
+          this.todo.push({id: todoID, type: 'todo', text: this.todoTemp});
         }
         else if (type === "weekTodo") {
-          var count = this.weeklyTodo.length;
-          this.weeklyTodo.push({id: count, type: 'weekTodo', text: this.weekTodoTemp});
-        }
-      },
-      deleteTodo: function(todoItem) {
-        if (todoItem.type === "todo") {
-          var index = this.todo.indexOf(todoItem);
-          this.todo.splice(index, 1);
-        }
-        else if (todoItem.type === "weekTodo") {
-          var index = this.weeklyTodo.indexOf(todoItem);
-          this.weeklyTodo.splice(index, 1);
+          let todoID = this.generateID(2);
+          this.weeklyTodo.push({id: todoID, type: 'weekTodo', text: this.weekTodoTemp});
         }
       },
     },
@@ -147,17 +131,36 @@
 </script>
 
 <style>
+  /*
+    http://www.tayloredmktg.com/rgb/
+    Snow: #fffafa
+    Snow 4: #8b8989
+    Old Lace: #fdf5e6
+    Cornsilk: #fff8dc
+    Najavo White: #ffdead
+    Lemon Chiffon: #fffacd
+    Azure: #f0ffff
+    Lavender: #e6e6fa
+    Misty Rose: #ffe4e1
+  */
+  body, button, input {
+    /* font-family: 'Inconsolata', monospace; */
+    /* font-family: 'Cousine', monospace; */
+    /* font-family: 'PT Mono', monospace; */
+  }
   .grid-container {
     display: grid;
     grid-gap: 25px;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
+  }
+  .section {
+    padding: 1% 2%;
   }
   .daySection {
-    background: wheat;
+    background: #ffdead;
   }
   .noteSection {
-    background: beige;
-    padding: 5px 10px;
+    background: #fdf5e6;
   }
   .lineThrough {
     text-decoration: line-through;
