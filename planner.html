@@ -20,13 +20,13 @@
           <button @click="addTodo('todo')">Add Item</button>
           <ul>
             <!-- v-for iterates through the todo objects in the array
-            v-bind:todo binds the individual todo object so it can be dynamic
+            v-bind:item binds the individual todo object so it can be dynamic
             v-bind:key is needed when using v-for so vue can keep track each node's identity
             @delete-todo listens for an event emited by the child component
             -->
             <todo-item
             v-for='(item, index) in todo'
-            v-bind:todo='item'
+            v-bind:item='item'
             v-bind:key='item.id'
             @delete-todo='todo.splice(index, 1)'>
             </todo-item>
@@ -40,17 +40,11 @@
           <ul>
             <!-- Same descriptions apply as for todo-item -->
             <todo-item
-            v-for='(item, index) in todo'
-            v-bind:todo='item'
+            v-for='(item, index) in weeklyTodo'
+            v-bind:item='item'
             v-bind:key='item.id'
             @delete-todo='weeklyTodo.splice(index, 1)'>
             </todo-item>
-            <!-- <weekly-todo
-            v-for='(item, index) in weeklyTodo'
-            v-bind:weekly-todo='item'
-            v-bind:key='item.id'
-            @delete-todo='weeklyTodo.splice(index, 1)'>
-            </weekly-todo> -->
           </ul>
         </div>
       </div>
@@ -97,29 +91,11 @@
           },
         },
       },
-      // 'weekly-todo': {
-      //   props: ['weeklyTodo'],
-      //   data: function() {
-      //     return {
-      //       crossedOut: false,
-      //     }
-      //   },
-      //   template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{weeklyTodo.text}}</li>',
-      //   methods: {
-      //     crossOut: function() {
-      //       this.crossedOut = !this.crossedOut;
-      //     },
-      //     deleteItem: function() {
-      //       // let todoItem = this.weeklyTodo;
-      //       this.$emit('delete-todo');
-      //     },
-      //   },
-      // },
     },
     //methods are functions that can be used to manipulate the data of the vue instance
     methods: {
       generateID: function(length) {
-        let newID = Math.random().toString(36).substring(length);
+        return Math.random().toString(36).substring(length);
       },
       addTodo: function(type) {
         if (type === "todo") {
