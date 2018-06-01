@@ -53,6 +53,21 @@
 </html>
 
 <script>
+  /*
+  todo-item:
+    - ability to edit existing todos
+    - change the way to delete, instead of click+shift maybe a button?
+    -
+  New Features:
+    - add a note section that has a text field to allow for larger notes
+    - implement the days of the week section, can use either todo-items or notes or some new component all together
+    - maybe make the input boxes a component itself so they are reusable
+    -
+  Large Scale:
+    - abstract the to-do and weekly to-do sections into a vue template file
+    - convert app to use a node server and a sql db
+    -
+  */
   var app = new Vue({
     el: '#app',
     //data holds the propeties for the vue instance, having data as a function allows for the ability to not overwrite data so there can multiple instances of the same data type
@@ -65,7 +80,6 @@
         daysOfWeek: [],
       }
     },
-
     //components are handy for creating reuseable elements
     components: {
       //components must have names that are at least two words and in kebab case
