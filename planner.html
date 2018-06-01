@@ -39,12 +39,18 @@
           <button @click="addTodo('weekTodo')">Add Item</button>
           <ul>
             <!-- Same descriptions apply as for todo-item -->
-            <weekly-todo
+            <todo-item
+            v-for='(item, index) in todo'
+            v-bind:todo='item'
+            v-bind:key='item.id'
+            @delete-todo='weeklyTodo.splice(index, 1)'>
+            </todo-item>
+            <!-- <weekly-todo
             v-for='(item, index) in weeklyTodo'
             v-bind:weekly-todo='item'
             v-bind:key='item.id'
             @delete-todo='weeklyTodo.splice(index, 1)'>
-            </weekly-todo>
+            </weekly-todo> -->
           </ul>
         </div>
       </div>
@@ -71,14 +77,14 @@
       //components must have names that are at least two words and in kebab case
       'todo-item': {
         //props are data that are passed down from the parent to the child, without them you wouldn't be able to access data from the parent
-        props: ['todo'],
+        props: ['item'],
         data: function() {
           return {
             crossedOut: false,
           }
         },
         //templates are the framework for the element that will appear in the DOM
-        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{todo.text}}</li>',
+        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{item.text}}</li>',
         //component methods are functions that can only be used on the component that they are defined in
         methods: {
           crossOut: function() {
@@ -91,24 +97,24 @@
           },
         },
       },
-      'weekly-todo': {
-        props: ['weeklyTodo'],
-        data: function() {
-          return {
-            crossedOut: false,
-          }
-        },
-        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{weeklyTodo.text}}</li>',
-        methods: {
-          crossOut: function() {
-            this.crossedOut = !this.crossedOut;
-          },
-          deleteItem: function() {
-            // let todoItem = this.weeklyTodo;
-            this.$emit('delete-todo');
-          },
-        },
-      },
+      // 'weekly-todo': {
+      //   props: ['weeklyTodo'],
+      //   data: function() {
+      //     return {
+      //       crossedOut: false,
+      //     }
+      //   },
+      //   template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{weeklyTodo.text}}</li>',
+      //   methods: {
+      //     crossOut: function() {
+      //       this.crossedOut = !this.crossedOut;
+      //     },
+      //     deleteItem: function() {
+      //       // let todoItem = this.weeklyTodo;
+      //       this.$emit('delete-todo');
+      //     },
+      //   },
+      // },
     },
     //methods are functions that can be used to manipulate the data of the vue instance
     methods: {
