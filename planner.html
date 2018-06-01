@@ -16,7 +16,7 @@
       <div class="section noteSection">
         <div class="todos">
           <h2>To-do</h2>
-          <input type="text" placeholder="new item" v-model="todoTemp">
+          <input type="text" placeholder="new item" v-model="todoTemp" @keydown.enter="addTodo('todo')">
           <button @click="addTodo('todo')">Add Item</button>
           <ul>
             <!-- v-for iterates through the todo objects in the array
@@ -35,7 +35,7 @@
 
         <div class="weeklyTodos">
           <h2>Weekly To-do</h2>
-          <input type="text" placeholder="new item" v-model="weekTodoTemp">
+          <input type="text" placeholder="new item" v-model="weekTodoTemp" @keydown.enter="addTodo('weekTodo')">
           <button @click="addTodo('weekTodo')">Add Item</button>
           <ul>
             <!-- Same descriptions apply as for todo-item -->
@@ -85,7 +85,7 @@
             this.crossedOut = !this.crossedOut;
           },
           deleteItem: function() {
-            let todoItem = this.todo;
+            // let todoItem = this.todo;
             //children/components can emit events up to the parent using $emit('EVENT-NAME') they can even pass along data
             this.$emit('delete-todo');
           },
@@ -104,7 +104,7 @@
             this.crossedOut = !this.crossedOut;
           },
           deleteItem: function() {
-            let todoItem = this.weeklyTodo;
+            // let todoItem = this.weeklyTodo;
             this.$emit('delete-todo');
           },
         },
@@ -120,10 +120,12 @@
           //this refers to the Vue instance, must be used in order to access data
           let todoID = this.generateID(2);
           this.todo.push({id: todoID, type: 'todo', text: this.todoTemp});
+          this.todoTemp = "";
         }
         else if (type === "weekTodo") {
           let todoID = this.generateID(2);
           this.weeklyTodo.push({id: todoID, type: 'weekTodo', text: this.weekTodoTemp});
+          this.weekTodoTemp = "";
         }
       },
     },
