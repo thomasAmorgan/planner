@@ -28,7 +28,7 @@
             v-for='(todoItem, index) in todo'
             v-bind:item='todoItem'
             v-bind:key='todoItem.id'
-            @delete-todo='todo.splice(index, 1)'>
+            @delete-todo='deleteTodo(todoItem, index)'>
             </todo-item>
           </ul>
         </div>
@@ -43,7 +43,7 @@
             v-for='(weekTodo, index) in weeklyTodo'
             v-bind:item='weekTodo'
             v-bind:key='weekTodo.id'
-            @delete-todo='weeklyTodo.splice(index, 1)'>
+            @delete-todo='deleteTodo(weekTodo, index)'>
             </todo-item>
           </ul>
         </div>
@@ -124,6 +124,14 @@
           this.weekTodoTemp = "";
         }
       },
+      deleteTodo: function(todoItem, index) {
+        if (todoItem.type === "todo") {
+          this.todo.splice(index, 1);
+        }
+        else if (todoItem.type === "weekTodo") {
+          this.weeklyTodo.splice(index, 1);
+        }
+      }
     },
   });
 </script>
