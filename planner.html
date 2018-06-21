@@ -25,9 +25,9 @@
             @delete-todo listens for an event emited by the child component
             -->
             <todo-item
-            v-for='(todo, index) in todo'
-            v-bind:item='todo'
-            v-bind:key='todo.id'
+            v-for='(todoItem, index) in todo'
+            v-bind:item='todoItem'
+            v-bind:key='todoItem.id'
             @delete-todo='todo.splice(index, 1)'>
             </todo-item>
           </ul>
