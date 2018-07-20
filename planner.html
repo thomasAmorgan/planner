@@ -14,6 +14,17 @@
 
       </div>
       <div class="section noteSection">
+        <div class="weeklyTodos">
+          <h2>Weekly To-do</h2>
+          <input type="text" placeholder="new item" v-model="weekTodoTemp" @keydown.enter="addTodo('weekTodo')">
+          <button @click="addTodo('weekTodo')">Add Item</button>
+          <ul>
+            <!-- Same descriptions apply as for todo-item -->
+            <todo-item v-for='(weekTodo, index) in weeklyTodo' v-bind:item='weekTodo' v-bind:key='weekTodo.id' @delete-todo='deleteTodo(weekTodo, index)'>
+            </todo-item>
+          </ul>
+        </div>
+
         <div class="todos">
           <h2>To-do</h2>
           <input type="text" placeholder="new item" v-model="todoTemp" @keydown.enter="addTodo('todo')">
@@ -29,21 +40,6 @@
             v-bind:item='todoItem'
             v-bind:key='todoItem.id'
             @delete-todo='deleteTodo(todoItem, index)'>
-            </todo-item>
-          </ul>
-        </div>
-
-        <div class="weeklyTodos">
-          <h2>Weekly To-do</h2>
-          <input type="text" placeholder="new item" v-model="weekTodoTemp" @keydown.enter="addTodo('weekTodo')">
-          <button @click="addTodo('weekTodo')">Add Item</button>
-          <ul>
-            <!-- Same descriptions apply as for todo-item -->
-            <todo-item
-            v-for='(weekTodo, index) in weeklyTodo'
-            v-bind:item='weekTodo'
-            v-bind:key='weekTodo.id'
-            @delete-todo='deleteTodo(weekTodo, index)'>
             </todo-item>
           </ul>
         </div>
@@ -89,14 +85,18 @@
         data: function() {
           return {
             crossedOut: false,
+            revealed: true,
           }
         },
         //templates are the framework for the element that will appear in the DOM
-        template: '<li v-bind:class="{lineThrough: crossedOut}" @click="crossOut" @click.shift="deleteItem">{{item.text}}</li>',
+        template: '<li @mouseover="revealDelete" @mouseout="revealDelete"><p v-bind:class="{lineThrough: crossedOut}" @click="crossOut">{{item.text}}</p> <a v-bind:class="{hoverReveal: revealed}"@click="deleteItem"> - delete</a></li>',
         //component methods are functions that can only be used on the component that they are defined in
         methods: {
           crossOut: function() {
             this.crossedOut = !this.crossedOut;
+          },
+          revealDelete: function() {
+            this.revealed = !this.revealed;
           },
           deleteItem: function() {
             // let todoItem = this.todo;
@@ -170,5 +170,11 @@
   }
   .lineThrough {
     text-decoration: line-through;
+  }
+  .hoverReveal {
+    display: none;
+  }
+  .todos ul li p {
+    display: inline-block;
   }
 </style>
